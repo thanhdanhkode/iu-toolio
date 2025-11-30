@@ -1,4 +1,4 @@
 node_modules
 .output
-components/ui
+ui
 pnpm-lock.yaml

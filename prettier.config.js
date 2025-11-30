@@ -2,7 +2,7 @@
 
 /**
  * @see https://prettier.io/docs/configuration
- * @type {import("prettier").Config}
+ * @type {import('prettier').Config & import('prettier-plugin-tailwindcss').PluginOptions}
  */
 export default {
   printWidth: 120,
@@ -11,6 +11,5 @@ export default {
   semi: false,
   bracketSameLine: true,
   trailingComma: "es5",
-  plugins: [import("prettier-plugin-tailwindcss")],
-  tailwindAttributes: ["className"],
+  plugins: ["prettier-plugin-tailwindcss"],
 }
