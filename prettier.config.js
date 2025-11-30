@@ -13,4 +13,4 @@ export default {
   trailingComma: "es5",
   plugins: [import("prettier-plugin-tailwindcss")],
   tailwindAttributes: ["className"],
-};
+}
