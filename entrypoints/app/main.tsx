@@ -35,28 +35,8 @@ const router = createHashRouter([
   },
 ])
 
-const App = () => {
-  const [isReady, setReady] = useState(false)
-  const [progressValue, setProgressValue] = useState(0)
-
-  useEffect(() => {
-    try {
-      const interval = setInterval(() => {
-        setProgressValue((prevProgress) => {
-          const newProgress = Math.min(prevProgress + Math.random() * 10, 100)
-          return newProgress
-        })
-      }, 100)
-      if (progressValue >= 100) setTimeout(() => setReady(true), 1000)
-      return () => clearInterval(interval)
-    } catch (error) {}
-  }, [progressValue])
-
-  return isReady ? <RouterProvider router={router} /> : <SplashScreen progressValue={progressValue} />
-}
-
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>
 )
