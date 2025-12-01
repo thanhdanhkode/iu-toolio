@@ -1,11 +1,9 @@
 import "@/assets/tailwind.css"
-import { StrictMode, useState } from "react"
+import { StrictMode } from "react"
 import ReactDOM from "react-dom/client"
 import { createHashRouter, RouterProvider } from "react-router"
-import SplashScreen from "./components/splash-screen"
 import { RootLayout } from "./layouts"
-import { DefaultPage, CoursesPage, SettingPage, NotFound } from "./pages"
-import AnnouncementPage from "./pages/annoucement"
+import { CoursesPage, NotFound } from "./pages"
 
 const router = createHashRouter([
   {
@@ -13,19 +11,7 @@ const router = createHashRouter([
     children: [
       {
         index: true,
-        element: <DefaultPage />,
-      },
-      {
-        path: "courses",
         element: <CoursesPage />,
-      },
-      {
-        path: "announcement",
-        element: <AnnouncementPage />,
-      },
-      {
-        path: "settings",
-        element: <SettingPage />,
       },
       {
         path: "*",

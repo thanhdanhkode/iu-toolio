@@ -14,24 +14,9 @@ import { useId } from "react"
 
 const NavigationItems = [
   {
-    label: "Home",
-    icon: Home,
-    href: "#/",
-  },
-  {
-    label: "Announcements",
-    icon: Megaphone,
-    href: "#/announcement",
-  },
-  {
     label: "Courses",
     icon: Book,
-    href: "#/courses",
-  },
-  {
-    label: "Settings",
-    icon: Settings,
-    href: "#/settings",
+    href: "#/",
   },
 ]
 
@@ -67,35 +52,6 @@ export function AppSidebar() {
           ))}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip={{ children: "Lock App" }}>
-              <Lock />
-              <span className="truncate">Lock App</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              size={"lg"}
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground">
-              <Avatar className="size-8 rounded-lg">
-                <AvatarImage
-                  src="https://heucollege.edu.vn/upload/2025/02/avatar-nam-ngau-anime-8.webp"
-                  alt="user.name"
-                />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">IU Toolio Demo</span>
-                <span className="truncate text-xs">iu.toolio@example.com</span>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
     </Sidebar>
   )
 }
