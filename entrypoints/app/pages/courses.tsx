@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 import { cn } from "@/lib/utils"
 import { LoaderCircle, Search } from "lucide-react"
 import React, { useId } from "react"
 
 const CoursesPage = () => {
-  const [isSearching, setIsSearching] = React.useState(true)
+  const [isSearching, setIsSearching] = React.useState(false)
 
   const table_titles = ["Course ID", "Course Code", "Course Name", "Credits", "Day", "Room", "Lecturer"]
   const list_courses = [
@@ -32,7 +33,7 @@ const CoursesPage = () => {
 
   return (
     <>
-      <div className="my-32">
+      <div className="mt-24 mb-10">
         <div className="flex flex-col items-center justify-center gap-7">
           <div className="text-3xl font-bold">Search courses</div>
           <div className="relative w-md">
@@ -75,13 +76,12 @@ const CoursesPage = () => {
               </div>
             ))}
           </div>
-          <div className="my-3 flex min-h-[40vh] divide-y-2 divide-neutral-950 overflow-x-hidden rounded-lg dark:bg-neutral-900">
-            {isSearching && (
-              <div className="flex flex-1 flex-col items-center justify-center gap-3 p-10">
-                <LoaderCircle className="animate-spin" />
-                <span>Searching...</span>
-              </div>
-            )}
+          <div
+            className={cn(
+              "my-3 min-h-[40vh] divide-y-2 divide-neutral-950 overflow-x-hidden rounded-lg dark:bg-neutral-900",
+              isSearching && "flex items-center justify-center"
+            )}>
+            {isSearching && <Spinner />}
             {!isSearching &&
               list_courses.map((course) => (
                 <div
