@@ -24,7 +24,7 @@ importers:
         specifier: ^0.7.1
         version: 0.7.2(prettier@3.7.3)
 
-  packages/extension:
+  app/extension:
     dependencies:
       '@hookform/resolvers':
         specifier: ^5.2.2
