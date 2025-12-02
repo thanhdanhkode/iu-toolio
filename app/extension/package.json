@@ -55,5 +55,6 @@
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.2",
     "wxt": "^0.20.6"
-  }
+  },
+  "license": "AGPL-3.0-only"
 }
