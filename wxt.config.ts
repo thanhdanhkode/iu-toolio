@@ -1,11 +1,12 @@
 import tailwindcss from "@tailwindcss/vite"
 import { defineConfig } from "wxt"
 import packageJson from "./package.json"
-import { makeId } from "./utils/index"
+import { makeId } from "./src/utils/index"
 
 // cSpell:ignore IU Toolio
 // See https://wxt.dev/api/config.html
 export default defineConfig({
+  srcDir: "src",
   modules: ["@wxt-dev/module-react"],
   vite: () => ({
     plugins: [tailwindcss()],

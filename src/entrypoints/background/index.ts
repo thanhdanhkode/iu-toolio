@@ -1,6 +1,5 @@
 import { PublicPath } from "wxt/browser"
-import { blackboardInstance } from "./modules/blackboard"
-import { edusoftWebInstance } from "./modules/edusoft"
+declare const self: ServiceWorkerGlobalScope
 
 export default defineBackground(async () => {
   console.log("Hello background!", { id: browser.runtime.id })
