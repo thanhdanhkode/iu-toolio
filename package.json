@@ -5,6 +5,8 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev:extension": "pnpm --filter @iu-toolio/extension dev",
+    "extension": "pnpm --filter @iu-toolio/extension",
     "prepare": "husky",
     "prettier": "prettier --write ."
   },
