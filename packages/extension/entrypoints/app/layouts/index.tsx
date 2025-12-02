@@ -5,7 +5,7 @@ import { AppSidebar } from "../components/app-sidebar"
 import AppHeader from "../components/app-header"
 import SplashScreen from "../components/splash-screen"
 import { useEffect, useState } from "react"
-import LockScreen from "../../../temp/lock-screen"
+import LockScreen from "../../../../../temp/lock-screen"
 
 const RootLayout = () => {
   const [isReady, setReady] = useState(false)
