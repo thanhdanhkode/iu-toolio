@@ -1,15 +1,13 @@
 import { Logo } from "@/components/icons/logo"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { Book, Home, Lock, Megaphone, Settings } from "lucide-react"
+import { Book } from "lucide-react"
 import { useId } from "react"
 
 const NavigationItems = [

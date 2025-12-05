@@ -1,17 +1,40 @@
 import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table"
+import { cn } from "@/lib/utils"
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+  VisibilityState,
+} from "@tanstack/react-table"
 
 interface CourseDataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
   data: TData[]
+  isLoading?: boolean
+  bodyClassName?: string
 }
 
-export const CourseDataTable = <TData, TValue>({ columns, data }: CourseDataTableProps<TData, TValue>) => {
+export const SearchCourseDataTable = <TData, TValue>({
+  columns,
+  data,
+  isLoading,
+  bodyClassName,
+}: CourseDataTableProps<TData, TValue>) => {
+  const [visibility, setVisibility] = useState<VisibilityState>({
+    courseRegisterData: false,
+  })
   const table = useReactTable({
     data,
     columns,
+    state: {
+      columnVisibility: visibility,
+    },
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
   })
 
   return (
@@ -31,8 +54,18 @@ export const CourseDataTable = <TData, TValue>({ columns, data }: CourseDataTabl
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
+          <TableBody className={cn(bodyClassName)}>
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-40 text-center">
+                  <div className="flex w-full items-center justify-center">
+                    <Spinner className="size-8" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -46,7 +79,7 @@ export const CourseDataTable = <TData, TValue>({ columns, data }: CourseDataTabl
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center">
+                  className="h-40 text-center">
                   No results.
                 </TableCell>
               </TableRow>
