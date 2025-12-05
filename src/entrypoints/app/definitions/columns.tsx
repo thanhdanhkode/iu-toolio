@@ -8,16 +8,20 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Separator } from "@/components/ui/separator"
+import { TableCell } from "@/components/ui/table"
 import { ColumnDef } from "@tanstack/react-table"
 import { CheckCheck, MoreHorizontal, X } from "lucide-react"
+import React, { useId } from "react"
 
 export type baseCourseType = {
+  courseRegisterData: string[] | string
   courseId: string
   courseCode: string
   courseName: string
   credits: number
-  day: string
-  room: string
+  day: string[] | string
+  room: string[] | string
   instructor: string
 }
 
@@ -47,6 +51,10 @@ export function createBaseCourseColumns<T extends baseCourseType>(): ColumnDef<T
       enableHiding: false,
     },
     {
+      accessorKey: "courseRegisterData",
+      enableHiding: true,
+    },
+    {
       accessorKey: "courseId",
       header: "Course ID",
     },
@@ -65,14 +73,56 @@ export function createBaseCourseColumns<T extends baseCourseType>(): ColumnDef<T
     {
       accessorKey: "day",
       header: "Day",
+      cell: ({ getValue }) => {
+        const values = getValue() as string[]
+
+        return (
+          <TableCell className="flex flex-col gap-1 p-0">
+            {values.map((value) => (
+              <React.Fragment key={useId()}>
+                <TableCell> {value || "N/A"}</TableCell>
+                <Separator className="last:hidden" />
+              </React.Fragment>
+            ))}
+          </TableCell>
+        )
+      },
     },
     {
       accessorKey: "room",
       header: "Room",
+      cell: ({ getValue }) => {
+        const values = getValue() as string[]
+
+        return (
+          <TableCell className="flex flex-col gap-1 p-0">
+            {values.map((value) => (
+              <React.Fragment key={useId()}>
+                <TableCell> {value || "N/A"}</TableCell>
+                <Separator className="last:hidden" />
+              </React.Fragment>
+            ))}
+          </TableCell>
+        )
+      },
     },
     {
       accessorKey: "instructor",
       header: "Instructor",
+      cell: ({ getValue }) => {
+        const values = getValue() as string[]
+
+        return (
+          <TableCell className="flex flex-col gap-1 p-0">
+            {values.map((value) => (
+              <React.Fragment key={useId()}>
+                <TableCell> {value || "N/A"}</TableCell>
+                <Separator className="last:hidden" />
+              </React.Fragment>
+            ))}
+          </TableCell>
+        )
+      },
     },
   ]
 }
