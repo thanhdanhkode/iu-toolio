@@ -1,6 +1,6 @@
-import ReactDOM from "react-dom/client"
-import App from "./App"
 import "@/assets/tailwind.css"
+import { createRoot, Root } from "react-dom/client"
+import App from "./App"
 
 export default defineContentScript({
   matches: ["*://edusoftweb.hcmiu.edu.vn/*", "*://blackboard.hcmiu.edu.vn/*"],
@@ -10,14 +10,15 @@ export default defineContentScript({
       name: "iu-toolio-integration",
       position: "inline",
       anchor: "html",
-      onMount: (container, shadow, shadowHost) => {
-        const root = document.createElement("div")
-        root.id = "iu-toolio-integration-root"
-        container.appendChild(root)
+      onMount: (container) => {
+        container.appendChild(document.createElement("div"))
 
-        return ReactDOM.createRoot(container).render(<App />)
+        const reactRoot = createRoot(container)
+        reactRoot.render(<App />)
+
+        return reactRoot
       },
-      onRemove: (mounted: any) => {
+      onRemove: (mounted?: Root | null) => {
         mounted?.unmount()
       },
     })
