@@ -7,7 +7,7 @@ import { makeId } from "./src/lib/make-id"
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   srcDir: "src",
-  modules: ["@wxt-dev/module-react", "@wxt-dev/i18n/module"],
+  modules: ["@wxt-dev/module-react", "@wxt-dev/i18n/module", "@wxt-dev/auto-icons"],
   vite: () => ({
     plugins: [tailwindcss()],
   }),
