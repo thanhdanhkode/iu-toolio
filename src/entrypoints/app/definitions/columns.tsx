@@ -9,27 +9,93 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Separator } from "@/components/ui/separator"
-import { TableCell } from "@/components/ui/table"
+import { Course, ExtendedCourse } from "@/types/course"
 import { ColumnDef } from "@tanstack/react-table"
 import { CheckCheck, MoreHorizontal, X } from "lucide-react"
 import React, { useId } from "react"
 
-export type baseCourseType = {
-  courseRegisterData: string[] | string
-  courseId: string
-  courseCode: string
-  courseName: string
-  credits: number
-  day: string[] | string
-  room: string[] | string
-  instructor: string
+export function createBaseCourseColumns<T extends Course>(): ColumnDef<T>[] {
+  return [
+    {
+      accessorKey: "key",
+      header: "Course Key",
+    },
+    {
+      accessorKey: "id",
+      header: "Course ID",
+    },
+    {
+      accessorKey: "code",
+      header: "Course Code",
+    },
+    {
+      accessorKey: "name",
+      header: "Course Name",
+    },
+    {
+      accessorKey: "credits",
+      header: "Credits",
+    },
+    {
+      accessorKey: "day",
+      header: "Day",
+      cell: ({ getValue }) => {
+        const values = (getValue() as unknown as string[]) || []
+
+        return (
+          <div className="flex flex-col gap-1 p-0">
+            {values.map((value) => (
+              <React.Fragment key={useId()}>
+                <div className="flex h-8 w-full items-center px-2">{value || "N/A"}</div>
+                <Separator className="last:hidden" />
+              </React.Fragment>
+            ))}
+          </div>
+        )
+      },
+    },
+    {
+      accessorKey: "room",
+      header: "Room",
+      cell: ({ getValue }) => {
+        const values = (getValue() as unknown as string[]) || []
+
+        return (
+          <div className="flex flex-col gap-1 p-0">
+            {values.map((value) => (
+              <React.Fragment key={useId()}>
+                <div className="flex h-8 w-full items-center px-2">{value || "N/A"}</div>
+                <Separator className="last:hidden" />
+              </React.Fragment>
+            ))}
+          </div>
+        )
+      },
+    },
+    {
+      accessorKey: "instructor",
+      header: "Instructor",
+      cell: ({ getValue }) => {
+        const values = (getValue() as unknown as string[]) || []
+
+        return (
+          <div className="flex flex-col gap-1 p-0">
+            {values.map((value) => (
+              <React.Fragment key={useId()}>
+                <div className="flex h-8 w-full items-center px-2">{value || "N/A"}</div>
+                <Separator className="last:hidden" />
+              </React.Fragment>
+            ))}
+          </div>
+        )
+      },
+    },
+  ]
 }
 
-export type extendedCourseType = baseCourseType & {
-  isRegistered?: boolean
-}
-
-export function createBaseCourseColumns<T extends baseCourseType>(): ColumnDef<T>[] {
+export function createSearchCourseColumns<T extends Course>(
+  onRegister?: (row: T, state: boolean) => void
+): ColumnDef<T>[] {
   return [
     {
       id: "select",
@@ -43,130 +109,49 @@ export function createBaseCourseColumns<T extends baseCourseType>(): ColumnDef<T
       cell: ({ row }) => (
         <Checkbox
           checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          onCheckedChange={(value) => {
+            row.toggleSelected(!!value)
+            onRegister?.(row.original as T, !!value)
+          }}
           aria-label="Select row"
         />
       ),
       enableSorting: false,
       enableHiding: false,
     },
-    {
-      accessorKey: "courseRegisterData",
-      enableHiding: true,
-    },
-    {
-      accessorKey: "courseId",
-      header: "Course ID",
-    },
-    {
-      accessorKey: "courseCode",
-      header: "Course Code",
-    },
-    {
-      accessorKey: "courseName",
-      header: "Course Name",
-    },
-    {
-      accessorKey: "credits",
-      header: "Credits",
-    },
-    {
-      accessorKey: "day",
-      header: "Day",
-      cell: ({ getValue }) => {
-        const values = getValue() as string[]
-
-        return (
-          <TableCell className="flex flex-col gap-1 p-0">
-            {values.map((value) => (
-              <React.Fragment key={useId()}>
-                <TableCell> {value || "N/A"}</TableCell>
-                <Separator className="last:hidden" />
-              </React.Fragment>
-            ))}
-          </TableCell>
-        )
-      },
-    },
-    {
-      accessorKey: "room",
-      header: "Room",
-      cell: ({ getValue }) => {
-        const values = getValue() as string[]
-
-        return (
-          <TableCell className="flex flex-col gap-1 p-0">
-            {values.map((value) => (
-              <React.Fragment key={useId()}>
-                <TableCell> {value || "N/A"}</TableCell>
-                <Separator className="last:hidden" />
-              </React.Fragment>
-            ))}
-          </TableCell>
-        )
-      },
-    },
-    {
-      accessorKey: "instructor",
-      header: "Instructor",
-      cell: ({ getValue }) => {
-        const values = getValue() as string[]
-
-        return (
-          <TableCell className="flex flex-col gap-1 p-0">
-            {values.map((value) => (
-              <React.Fragment key={useId()}>
-                <TableCell> {value || "N/A"}</TableCell>
-                <Separator className="last:hidden" />
-              </React.Fragment>
-            ))}
-          </TableCell>
-        )
-      },
-    },
   ]
 }
 
-export function createActionCourseColumn<T extends baseCourseType>(): ColumnDef<T>[] {
-  return [
-    {
-      id: "actions",
-      enableHiding: false,
-      cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="ghost"
-              className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(row.original.courseId)}>
-              Copy course ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      ),
-    },
-  ]
-}
-
-export const baseCourseColumns = createBaseCourseColumns<baseCourseType>()
-
-export const extendedActionCourseColumn: ColumnDef<baseCourseType>[] = createActionCourseColumn<baseCourseType>()
-
-export const extendedCourseColumns: ColumnDef<extendedCourseType>[] = [
-  ...createBaseCourseColumns<extendedCourseType>(),
+export const studentCourseColumns: ColumnDef<ExtendedCourse>[] = [
+  ...createBaseCourseColumns<Course>(),
   {
     accessorKey: "isRegistered",
     header: "Registered",
     cell: ({ row }) => (row.original.isRegistered ? <CheckCheck className="size-4" /> : <X className="size-4" />),
   },
-  ...createActionCourseColumn<extendedCourseType>(),
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem onClick={() => navigator.clipboard.writeText(row.original.id)}>
+            Copy course ID
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>View customer</DropdownMenuItem>
+          <DropdownMenuItem>View payment details</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    ),
+  },
 ]

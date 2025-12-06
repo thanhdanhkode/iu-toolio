@@ -1,23 +1,25 @@
 import { Button } from "@/components/ui/button"
 import { sendMessage } from "@/lib/messaging"
 import { cn } from "@/lib/utils"
+import { Course, ExtendedCourse } from "@/types/course"
+import { ColumnDef } from "@tanstack/react-table"
 import { Search } from "lucide-react"
-import { useCallback, useState } from "react"
-import { SearchCourseDataTable } from "../components/data-table"
-import { baseCourseColumns } from "../definitions/columns"
+import { useCallback, useMemo, useRef, useState } from "react"
+import { SearchCourseTable, StudentCourseTable } from "../components/data-table"
+import { createBaseCourseColumns, createSearchCourseColumns, studentCourseColumns } from "../definitions/columns"
 
 const CoursesPage = () => {
   const [isSearching, setIsSearching] = useState(false)
   const [data, setData] = useState<
     {
-      courseRegisterData: string[] | string
-      courseId: string
-      courseCode: string
-      courseName: string
+      id: string
+      key: string
+      code: string
+      name: string
       credits: number
-      day: string
-      room: string
-      instructor: string
+      day: string[]
+      room: string[]
+      instructor: string[]
     }[]
   >([])
   const inputSearchRef = useRef<HTMLInputElement>(null)
@@ -27,16 +29,34 @@ const CoursesPage = () => {
     setData([])
     const query = inputSearchRef.current?.value
     if (!query || query.trim() === "") {
-      console.log("Empty search query, aborting.")
       return
     }
+
     setIsSearching(true)
+
     const response = await sendMessage("getCourseList", query)
     if (response) {
       setData(response)
       setIsSearching(false)
     }
   }, [])
+
+  const [studentCourses, setStudentCourses] = useState<ExtendedCourse[]>([])
+
+  const addCourse = useCallback((course: Course, state: boolean) => {
+    setStudentCourses((prev) => {
+      const exists = prev.some((c) => c.key === course.key && c.id === course.id)
+      if (exists && state) return prev
+      else if (exists && !state) return prev.filter((c) => c.key !== course.key && c.id !== course.id)
+
+      return [...prev, { ...(course as Course), isRegistered: false }]
+    })
+  }, [])
+
+  const searchCourseColumns: ColumnDef<Course>[] = useMemo(
+    () => [...createSearchCourseColumns<Course>(addCourse), ...createBaseCourseColumns<Course>()],
+    [addCourse]
+  )
 
   return (
     <>
@@ -82,11 +102,10 @@ const CoursesPage = () => {
           <span className="normal-case"></span>
         </div>
         <div className={cn("my-3 w-full space-y-3", isSearching && "flex items-center justify-center")}>
-          <SearchCourseDataTable
-            columns={baseCourseColumns}
+          <SearchCourseTable
+            columns={searchCourseColumns}
             data={data}
-            isLoading={isSearching}
-            bodyClassName="h-160"
+            onLoad={isSearching}
           />
         </div>
       </div>
@@ -95,10 +114,10 @@ const CoursesPage = () => {
           <span className="normal-case">Your courses</span>
         </div>
         <div className={cn("my-3 w-full space-y-3", isSearching && "flex items-center justify-center")}>
-          {/* <CourseDataTable
-            columns={extendedCourseColumns}
-            data={data.map((c) => ({ ...c, isRegistered: false }))}
-          /> */}
+          <StudentCourseTable
+            columns={studentCourseColumns}
+            data={studentCourses}
+          />
         </div>
       </div>
     </>
