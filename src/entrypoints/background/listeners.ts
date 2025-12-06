@@ -1,5 +1,3 @@
-import { PublicPath } from "wxt/browser"
-
 type OnInstalledReason = "install" | "update" | "chrome_update" | "shared_module_update"
 
 export class BackgroundEventListeners {
@@ -63,7 +61,6 @@ export class BackgroundEventListeners {
           focused: update,
         })
       }
-
     } catch (_) {
       console.error(_)
     }

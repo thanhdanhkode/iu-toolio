@@ -1,17 +1,5 @@
-// cSpell:ignore  aspnet viewstate eventargument eventtarget viewstategenerator lbtn ajaxpro ashx fline
-
 import { BaseInstance } from "./base"
-
-interface CourseDataType {
-  courseRegisterData: string[] | string | undefined
-  courseId: string
-  courseCode: string
-  courseName: string
-  credits: number
-  day: string[]
-  room: string[]
-  instructor: string[]
-}
+import { Course } from "@/types/course"
 
 interface AspNetState {
   __EVENTTARGET: string
@@ -78,8 +66,8 @@ export class EdusoftWebInstance extends BaseInstance {
     }
   }
 
-  public static getCourse = async (filter: string = ""): Promise<CourseDataType[]> => {
-    const courses: CourseDataType[] = []
+  public static getCourse = async (filter: string = ""): Promise<Course[]> => {
+    const courses: Course[] = []
 
     try {
       if (!(await this.checkLogin())) throw new Error("Not logged in")
@@ -96,11 +84,7 @@ export class EdusoftWebInstance extends BaseInstance {
       const $ = this.htmlLoader(response.data.value)
 
       $("table").each((_, table) => {
-        // console.log($(table).html())
-
-        // const $row = $(table).find("tr").eq(0)
         const $cols = $(table).find("td")
-        console.log($($cols).html())
 
         const getList = (idx: number) => {
           return $cols
@@ -110,18 +94,19 @@ export class EdusoftWebInstance extends BaseInstance {
             .get()
         }
 
+        const normalizeVal = (v: unknown) => (Array.isArray(v) ? String(v[0] ?? "") : String(v ?? ""))
+
         courses.push({
-          courseRegisterData: $cols.eq(0).find("input").val() || "",
-          courseId: $cols.eq(1).text().trim() || "",
-          courseCode: $cols.eq(2).text().trim() || "",
-          courseName: $cols.eq(3).text().trim() || "",
+          id: normalizeVal($cols.eq(0).find("input").val()) || "",
+          key: $($cols.eq(0).find("input")).attr("id") || "",
+          code: $cols.eq(1).text().trim() || "",
+          name: $cols.eq(3).text().trim() || "",
           credits: Number($cols.eq(6).text().trim()) || 0,
           day: getList(12),
           room: getList(15),
           instructor: getList(16),
         })
       })
-
       return courses
     } catch (_) {
       console.error(_)
@@ -129,5 +114,44 @@ export class EdusoftWebInstance extends BaseInstance {
     }
   }
 
-  public static registerCourse = async () => {}
+  public static registerCourse = async (courseId: string) => {
+    try {
+      if (!(await this.checkLogin())) throw new Error("Not logged in")
+
+      const splitCourseId = courseId.split("|")
+
+      const payload = {
+        IsValidCoso: false,
+        IsValidTKB: false,
+        MaDK: splitCourseId[0],
+        MaMH: splitCourseId[1],
+        Sotc: splitCourseId[4],
+        TenMH: splitCourseId[2],
+        MaNh: splitCourseId[3],
+        StrsoTCHP: "0",
+        IsCheck: "true",
+        OldMaDK: splitCourseId[10],
+        StrngayThi: splitCourseId[6],
+        TietBD: splitCourseId[8],
+        SoTiet: splitCourseId[9],
+        IsMHDangKyCungKhoiSV: "0",
+      }
+
+      await this.request.post("/ajaxpro/EduSoft.Web.UC.DangKyMonHoc,EduSoft.Web.ashx", payload, {
+        headers: { "Content-Type": "text/plain; charset=UTF-8", "X-AjaxPro-Method": "LuuVaoKetQuaDangKy" },
+      })
+    } catch (_) {
+      console.error(_)
+    }
+  }
+
+  public static unregisterCourse = async (courseId: string) => {}
+
+  public static saveRegistration = async () => {
+    try {
+      if (!(await this.checkLogin())) throw new Error("Not logged in")
+    } catch (_) {
+      console.error(_)
+    }
+  }
 }

@@ -1,5 +1,3 @@
-// cSpell:ignore axios-cookiejar-support
-
 import axios, { AxiosInstance } from "axios"
 import { wrapper } from "axios-cookiejar-support"
 import * as cheerio from "cheerio"
